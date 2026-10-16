@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Poyezd Jo'natish Tizimi</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#fff;min-height:100vh;padding:20px}
+.container{max-width:1200px;margin:0 auto}
+.header{text-align:center;color:#1e3a5f;margin-bottom:30px}
+.header h1{font-size:2.2em;margin-bottom:10px}
+.header p{color:#5b7a99}
+.info-panel{background:#fff;border:1px solid #e5eaf0;border-radius:15px;padding:30px;box-shadow:0 6px 24px rgba(30,58,95,.10);margin-bottom:30px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.info-item{padding-left:15px;border-left:4px solid}
+.info-item:nth-child(1){border-color:#3b82f6}.info-item:nth-child(2){border-color:#10b981}.info-item:nth-child(3){border-color:#ef4444}
+.info-item:nth-child(4){border-color:#f59e0b}.info-item:nth-child(5){border-color:#8b5cf6}.info-item:nth-child(6){border-color:#6366f1}
+.info-item p:first-child{color:#6b7280;font-size:.9em;margin-bottom:5px}
+.info-item p:last-child{font-weight:bold;font-size:1.1em;color:#1f2937}
+.animation-area{position:relative;background:linear-gradient(to bottom,#ffffff 0%,#dff1fc 55%,#bfe3f8 100%);border:1px solid #e5eaf0;border-radius:15px;padding:40px;box-shadow:0 6px 24px rgba(30,58,95,.10);margin-bottom:30px;overflow:hidden}
+.animation-area::after{content:'';position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(#b5e8ad,#86d680)}
+.cloud{position:absolute;background:#fff;border-radius:50px;box-shadow:0 4px 12px rgba(100,150,200,.18);animation:drift linear infinite}
+.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:50%;height:160%;top:-70%;left:15%}
+.cloud::after{width:35%;height:120%;top:-45%;right:15%}
+.c1{width:110px;height:34px;top:45px;left:-200px;animation-duration:55s;animation-delay:-10s}
+.c2{width:150px;height:44px;top:95px;left:-200px;animation-duration:80s;animation-delay:-40s}
+.c3{width:90px;height:28px;top:35px;left:-200px;animation-duration:65s;animation-delay:-50s}
+.c4{width:130px;height:38px;top:75px;left:-200px;animation-duration:90s;animation-delay:-22s}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 450px))}}
+.railway-container{position:relative;z-index:1;height:300px}
+.station{position:absolute;top:50%;transform:translateY(-50%);padding:15px 20px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,.2);z-index:10;color:#fff}
+.station.start{left:0;background:#2563eb}.station.end{right:0;background:#dc2626}
+.station h3{font-size:1.1em;margin-bottom:5px}.station p{font-size:.9em;opacity:.9}
+.railway{position:absolute;top:50%;left:120px;right:120px;height:8px;background:#4b5563;transform:translateY(-50%)}
+.sleeper{position:absolute;top:-4px;width:4px;height:16px;background:#6b7280}
+.train{position:absolute;bottom:50%;left:10%;transform:translateY(4px);display:flex;align-items:flex-end;flex-direction:row-reverse;z-index:5}
+.locomotive{background:linear-gradient(135deg,#0f3d5e,#0e7490);border-bottom:5px solid #fbbf24;color:#fff;padding:15px 20px;border-radius:14px 22px 6px 6px;box-shadow:0 5px 20px rgba(15,61,94,.35);display:flex;align-items:center;gap:10px}
+.locomotive svg{width:32px;height:32px}
+.train-info h4{font-size:1.2em;margin-bottom:3px}.train-info p{font-size:.8em}
+.wagons{display:flex;gap:5px;margin-right:10px;flex-direction:row-reverse}
+.wagon{position:relative;width:46px;height:34px;background:linear-gradient(to bottom,#0e7490 0 38%,#f0fdfa 38% 100%);border:2px solid #0f3d5e;border-radius:6px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;font-size:11px;font-weight:bold;color:#0f3d5e;margin-bottom:6px}
+.wagon::after{content:'';position:absolute;bottom:-9px;left:5px;right:5px;height:8px;background:radial-gradient(circle at 20% 50%,#1f2937 3px,transparent 4px),radial-gradient(circle at 80% 50%,#1f2937 3px,transparent 4px)}
+.progress-bar{position:absolute;bottom:20px;left:120px;right:120px;height:8px;background:#d1d5db;border-radius:10px;overflow:hidden;display:none}
+.progress-bar.active{display:block}
+.progress-fill{height:100%;background:#10b981;width:0}
+.controls{display:flex;justify-content:center;gap:20px;margin-bottom:30px;flex-wrap:wrap}
+.btn{padding:15px 40px;font-size:1.1em;font-weight:bold;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .3s;box-shadow:0 5px 15px rgba(0,0,0,.2);color:#fff}
+.btn:hover{transform:translateY(-2px)}
+.btn-start{background:#10b981}.btn-start:hover{background:#059669}
+.btn-start:disabled{background:#9ca3af;cursor:not-allowed;transform:none;opacity:.5}
+.btn-reset{background:#3b82f6}.btn-reset:hover{background:#2563eb}
+.status-panel{background:#fff;border-radius:10px;padding:20px;box-shadow:0 5px 15px rgba(0,0,0,.2);margin-bottom:20px;display:none;color:#374151}
+.status-panel.active{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.status-label{font-weight:bold;margin-right:10px}
+.code-panel{background:#1f2937;color:#10b981;border-radius:10px;padding:20px;font-family:'Courier New',monospace}
+.code-label{color:#9ca3af;margin-bottom:10px}
+.code-input-area{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.code-input{flex:1;min-width:200px;padding:10px;background:#374151;color:#10b981;border:2px solid #4b5563;border-radius:5px;font-family:'Courier New',monospace;font-size:.9em}
+.btn-update{padding:10px 20px;background:#10b981;color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:bold}
+.btn-update:hover{background:#059669}
+.code-hint{color:#9ca3af;font-size:.85em;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Poyezd Jo'natish Tizimi</h1>
+    <p>O'zbekiston Temir Yo'llari - 02 Xabar</p>
+  </div>
+
+  <div class="info-panel"><div class="info-grid">
+    <div class="info-item"><p>Poyezd raqami</p><p id="displayPoyezdRaqami">4386</p></div>
+    <div class="info-item"><p>Jo'natuvchi</p><p id="displayJonatuvchi">7300 (Toshkent)</p></div>
+    <div class="info-item"><p>Manzil</p><p id="displayManzil">7651 (Qo'qon)</p></div>
+    <div class="info-item"><p>Sana/Vaqt</p><p id="displaySanaVaqt">22/05 soat 17:13</p></div>
+    <div class="info-item"><p>Massa</p><p id="displayMassa">02936 tonna</p></div>
+    <div class="info-item"><p>Vagonlar uzunligi</p><p id="displayVagonlar">081 shartli vagon</p></div>
+  </div></div>
+
+  <div class="animation-area">
+    <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="cloud c4"></div>
+    <div class="railway-container">
+    <div class="station start"><h3 id="startStationName">Toshkent</h3><p id="startStationCode">7300</p></div>
+    <div class="station end"><h3 id="endStationName">QO'QON</h3><p id="endStationCode">7651</p></div>
+    <div class="railway" id="railway"></div>
+    <div class="train" id="train">
+      <div class="locomotive">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M4 10h16M8 14h.01M12 14h.01M16 14h.01"/></svg>
+        <div class="train-info"><h4 id="trainNumber">4386</h4><p id="trainProgress">0%</p></div>
+      </div>
+      <div class="wagons" id="wagons">
+        <div class="wagon">1</div><div class="wagon">2</div><div class="wagon">3</div><div class="wagon">4</div><div class="wagon">5</div>
+      </div>
+    </div>
+    <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+  </div></div>
+
+  <div class="controls">
+    <button class="btn btn-start" id="startBtn">▶ Poyezdni Jo'natish</button>
+    <button class="btn btn-reset" id="resetBtn">↻ Qayta Boshlash</button>
+  </div>
+
+  <div class="status-panel" id="statusPanel">
+    <p><span class="status-label">Status:</span><span id="statusText">Tayyor</span></p>
+    <p id="statusDetail">02 xabar kodini kiriting</p>
+  </div>
+
+  <div class="code-panel">
+    <p class="code-label">02 Xabar kodi:</p>
+    <div class="code-input-area">
+      <input type="text" class="code-input" id="codeInput" value="(:02  7300 4386 7300 067 7651 2 22 05 17 13 081 02936 7 0 0 0 0">
+      <button class="btn-update" id="updateCodeBtn">Yangilash</button>
+    </div>
+    <p class="code-hint">Format: (:02 [bekat] [poyezd] [jo'natuvchi] [tartib] [manzil] [belgi] [kun] [oy] [soat] [daq] [vagon] [massa] [to'silish] [yuqori] [yon] [hayvon] [marshrut]</p>
+  </div>
+</div>
+
+<script>
+const train=document.getElementById('train'),startBtn=document.getElementById('startBtn'),resetBtn=document.getElementById('resetBtn'),
+progressBar=document.getElementById('progressBar'),progressFill=document.getElementById('progressFill'),statusPanel=document.getElementById('statusPanel'),
+statusText=document.getElementById('statusText'),statusDetail=document.getElementById('statusDetail'),trainProgress=document.getElementById('trainProgress'),
+railway=document.getElementById('railway'),codeInput=document.getElementById('codeInput'),updateCodeBtn=document.getElementById('updateCodeBtn');
+
+let trainData={poyezdRaqami:'4386',jonatuvchi:'7300',jonatuvchiNomi:'Toshkent',manzil:'7651',manzilNomi:'Qo\'qon',kun:'22',oy:'05',soat:'17',daqiqa:'13',massa:'02936',uzunlik:'081'};
+let dataLoaded=false,position=0,animationInterval=null,isAnimating=false;
+
+for(let i=0;i<20;i++){const s=document.createElement('div');s.className='sleeper';s.style.left=(i*5)+'%';railway.appendChild(s);}
+
+const bekatlar={'7258':'Xovos','7226':'Angren','7300':'Toshkent','7331':'Samarqand','7376':'Buxoro','7651':'Qo\'qon','7362':'Qarshi','7383':'Termiz','7357':'Jizzax','7400':'Namangan','7142':'Shovot'};
+const oylar={'01':'yanvar','02':'fevral','03':'mart','04':'aprel','05':'may','06':'iyun','07':'iyul','08':'avgust','09':'sentyabr','10':'oktyabr','11':'noyabr','12':'dekabr'};
+
+function parseCode(code){
+  const clean=code.trim().replace(/^\(:02\s*/,'').replace(/\)?\s*$/,'');
+  const parts=clean.trim().split(/\s+/);
+  if(parts.length<17)return{success:false,count:parts.length};
+  trainData.poyezdRaqami=parts[1];
+  trainData.jonatuvchi=parts[2];
+  trainData.manzil=parts[4];
+  trainData.kun=parts[6];trainData.oy=parts[7];trainData.soat=parts[8];trainData.daqiqa=parts[9];
+  trainData.uzunlik=parts[10];trainData.massa=parts[11];
+  trainData.jonatuvchiNomi=bekatlar[parts[2]]||'Bekat '+parts[2];
+  trainData.manzilNomi=bekatlar[parts[4]]||'Bekat '+parts[4];
+  updateDisplay();
+  return{success:true};
+}
+
+function updateDisplay(){
+  const oyNomi=oylar[trainData.oy]||trainData.oy;
+  const t=id=>document.getElementById(id);
+  t('displayPoyezdRaqami').textContent=trainData.poyezdRaqami;
+  t('displayJonatuvchi').textContent=trainData.jonatuvchi+' ('+trainData.jonatuvchiNomi+')';
+  t('displayManzil').textContent=trainData.manzil+' ('+trainData.manzilNomi+')';
+  t('displaySanaVaqt').textContent=trainData.kun+'-'+oyNomi+' soat '+trainData.soat+':'+trainData.daqiqa;
+  t('displayMassa').textContent=trainData.massa+' tonna';
+  t('displayVagonlar').textContent=trainData.uzunlik+' shartli vagon';
+  t('startStationName').textContent=trainData.jonatuvchiNomi.toUpperCase();
+  t('startStationCode').textContent=trainData.jonatuvchi;
+  t('endStationName').textContent=trainData.manzilNomi.toUpperCase();
+  t('endStationCode').textContent=trainData.manzil;
+  t('trainNumber').textContent=trainData.poyezdRaqami;
+  statusDetail.textContent='Poyezd '+trainData.jonatuvchiNomi+'dan '+trainData.manzilNomi+'ga jo\'natish uchun tayyor';
+}
+
+function resetView(){
+  if(animationInterval)clearInterval(animationInterval);
+  position=0;isAnimating=false;
+  train.style.left='10%';progressFill.style.width='0%';trainProgress.textContent='0%';
+  progressBar.classList.remove('active');statusPanel.classList.remove('active');
+}
+
+startBtn.disabled=true;
+
+updateCodeBtn.addEventListener('click',function(){
+  const code=codeInput.value.trim();
+  if(!code){alert('Xatolik! 02 xabar kodini kiriting.');return;}
+  const r=parseCode(code);
+  if(r.success){
+    resetView();dataLoaded=true;startBtn.disabled=false;
+    alert('02 xabar muvaffaqiyatli yangilandi!\n\nPoyezd: '+trainData.poyezdRaqami+'\nYo\'nalish: '+trainData.jonatuvchiNomi+' → '+trainData.manzilNomi+'\nMassa: '+trainData.massa+' tonna\nUzunlik: '+trainData.uzunlik+' shartli vagon');
+  }else{
+    alert('Xato format!\n\nBarcha parametrlar to\'liq kiritilishi shart. Hozir '+r.count+' ta parametr topildi, kamida 17 ta kerak.');
+    startBtn.disabled=true;dataLoaded=false;
+  }
+});
+
+codeInput.addEventListener('keypress',e=>{if(e.key==='Enter')updateCodeBtn.click();});
+
+startBtn.addEventListener('click',function(){
+  if(isAnimating||!dataLoaded)return;
+  isAnimating=true;startBtn.disabled=true;
+  progressBar.classList.add('active');statusPanel.classList.add('active');
+  position=0;
+  animationInterval=setInterval(function(){
+    position+=1;
+    train.style.left=Math.min(65,10+position*0.55)+'%';
+    progressFill.style.width=position+'%';
+    trainProgress.textContent=position+'%';
+    if(position<100){
+      statusText.textContent='🚂 Yo\'lda...';
+      statusDetail.textContent='Poyezd '+trainData.jonatuvchiNomi+'dan '+trainData.manzilNomi+'ga ketmoqda. Yo\'lning '+position+'% qismi bosib o\'tildi';
+    }else{
+      statusText.textContent='✅ Manziliga yetdi';
+      statusDetail.textContent='Poyezd '+trainData.manzilNomi+' bekatiga muvaffaqiyatli yetib keldi';
+      clearInterval(animationInterval);isAnimating=false;startBtn.disabled=false;
+    }
+  },50);
+});
+
+resetBtn.addEventListener('click',function(){
+  resetView();
+  statusText.textContent='Tayyor';
+  startBtn.disabled=!dataLoaded;
+  statusDetail.textContent=dataLoaded?'Poyezd '+trainData.jonatuvchiNomi+'dan '+trainData.manzilNomi+'ga jo\'natish uchun tayyor':'02 xabar kodini kiriting';
+});
+
+// Boshlang'ich 02 xabarni avtomatik yuklash
+if(parseCode(codeInput.value).success){dataLoaded=true;startBtn.disabled=false;}
+</script>
+</body>
+</html>
